@@ -1,0 +1,4 @@
+.vagrant
+cephfs_provisioner/*.yml
+rbd_provisioner/*.yml
+secrets.yml
