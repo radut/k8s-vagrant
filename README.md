@@ -113,3 +113,34 @@ kubectl get -n default secret $(kubectl get -n default serviceaccount cluster-ad
 kubectl get svc 
 
 ```
+
+
+
+
+```
+dig +time=2 +tries=1 +noall +answer @192.168.16.90  google.ro
+
+kdig -d @1.1.1.1 +tls-ca +tls-host=cloudflare-dns.com  example.com
+
+brew tap blendle/blendle; brew install kns
+
+kubectl run ubuntu-radu --rm -ti --limits="cpu=200m,memory=512Mi" --image=radut/ubuntu --restart=Never /bin/bash
+
+kubectl run ubuntu-radu --generator=run-pod/v1 --rm -ti --limits="cpu=200m,memory=512Mi" --image=radut/ubuntu  /bin/bash
+
+
+kubectl get pods --show-labels
+
+kubectl get pods -o wide --sort-by="{.spec.nodeName}"
+
+
+kubectl run ubuntu-radu --rm -ti --image=radut/ubuntu --restart=Never /bin/bash
+
+
+# Display only the most recent 20 lines of output in pod nginx
+kubectl logs --tail=20 nginx
+
+# Show all logs from pod nginx written in the last hour
+kubectl logs --since=1h nginx
+
+```
