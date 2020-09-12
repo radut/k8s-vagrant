@@ -40,7 +40,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: js-app
-          image: registry.radut.xyz/js-app:v1
+          image: radut/js-app:v1
           imagePullPolicy: Always
           env:
           - name: SOME_KEY
