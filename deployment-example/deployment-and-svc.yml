@@ -35,8 +35,8 @@ spec:
                     values:
                     - js-app
                 topologyKey: kubernetes.io/hostname
-      imagePullSecrets:
-        - name: nexus-registry
+#      imagePullSecrets:
+#        - name: nexus-registry
       terminationGracePeriodSeconds: 10
       containers:
         - name: js-app

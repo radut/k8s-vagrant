@@ -33,8 +33,8 @@ spec:
                 values:
                 - js-app
             topologyKey: kubernetes.io/hostname
-      imagePullSecrets:
-        - name: nexus-registry
+#      imagePullSecrets:
+#        - name: nexus-registry
       containers:
         - name: js-app
           image: radut/js-app:v1
