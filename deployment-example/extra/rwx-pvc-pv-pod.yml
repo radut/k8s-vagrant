@@ -1,0 +1,57 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rwx-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi
+#  storageClassName: standard
+#kubectl patch pv <your-pv-name> -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}'
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: rwx-mount-pod-1
+spec:
+  containers:
+    - name: mount-pod
+      image: busybox
+      command:
+        - "/bin/sh"
+      args:
+        - "-c"
+        - "touch /mnt/SUCCESS; while :; do sleep 3600; done"
+      volumeMounts:
+        - name: pvc
+          mountPath: "/mnt/"
+  restartPolicy: "Never"
+  volumes:
+    - name: pvc
+      persistentVolumeClaim:
+        claimName: rwx-pvc
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: rwx-mount-pod-2
+spec:
+  containers:
+    - name: mount-pod
+      image: busybox
+      command:
+        - "/bin/sh"
+      args:
+        - "-c"
+        - "touch /mnt/SUCCESS; while :; do sleep 3600; done"
+      volumeMounts:
+        - name: pvc
+          mountPath: "/mnt/"
+  restartPolicy: "Never"
+  volumes:
+    - name: pvc
+      persistentVolumeClaim:
+        claimName: rwx-pvc

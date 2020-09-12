@@ -1,0 +1,211 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: js-app
+spec:
+  replicas: 2
+  minReadySeconds: 3
+  selector:
+    matchLabels:
+      app: js-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 50%
+  template:
+    metadata:
+      labels:
+        app: js-app
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '3000'
+        prometheus.io/path: '/metrics'
+        prometheus.io/scheme: 'http'
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - js-app
+                topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: js-app
+          image: radut/js-app:v1
+          imagePullPolicy: Always
+          env:
+          - name: SOME_KEY
+            value: "some-value"
+#          - name: SPECIAL_LEVEL_KEY
+#            valueFrom:
+#              configMapKeyRef:
+#                # The ConfigMap containing the value you want to assign to SPECIAL_LEVEL_KEY
+#                name: special-config
+#                # Specify the key associated with the value
+#                key: special.how
+          ports:
+          - containerPort: 3000
+          resources:
+            limits:
+              cpu: "1"
+              memory: 100Mi
+            requests:
+              cpu: 500m
+              memory: 50Mi
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 3000
+              httpHeaders:
+              - name: X-Custom-Header
+                value: Awesome
+            initialDelaySeconds: 10
+            periodSeconds: 3
+
+#          readinessProbe:
+#            tcpSocket:
+#              port: 8080
+#            initialDelaySeconds: 5
+#            periodSeconds: 10
+#          livenessProbe:
+#            tcpSocket:
+#              port: 8080
+#            initialDelaySeconds: 15
+#            periodSeconds: 20
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: js-app-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: js-app
+---
+#apiVersion: policy/v1beta1
+#kind: PodDisruptionBudget
+#metadata:
+#  name: js-app-pdb
+#spec:
+#  maxUnavailable: 1
+#  selector:
+#    matchLabels:
+#      app: js-app
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: js-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: js-app
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 10
+
+## Service
+
+### NodePort TCP with port spec
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  labels:
+#    app: js-app
+#  name: js-app
+#spec:
+#  selector:
+#    app: js-app
+##  sessionAffinity: None
+#  sessionAffinity: ClientIP
+#  type: NodePort
+#  ports:
+#    - port: 80
+#      targetPort: 3000
+#      nodePort: 32100
+#      protocol: TCP
+
+
+### NodePort TCP without port spec
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  labels:
+#    app: js-app
+#  name: js-app
+#spec:
+#  selector:
+#    app: js-app
+#  #  sessionAffinity: None
+#  sessionAffinity: ClientIP
+#  type: NodePort
+#  ports:
+#  - port: 80
+#    targetPort: 3000
+#    protocol: TCP
+
+
+### ClusterIP
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  labels:
+#    app: js-app
+#  name: js-app
+#spec:
+#  #  clusterIP: 10.233.25.145
+#  selector:
+#    app: js-app
+#  #  sessionAffinity: None
+#  sessionAffinity: ClientIP
+#  type: ClusterIP
+#  ports:
+#  - name: http
+#    port: 80
+#    targetPort: 3000
+#    protocol: TCP
+
+
+
+## LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: js-app
+  name: js-app
+spec:
+  selector:
+    app: js-app
+  #  sessionAffinity: None
+  sessionAffinity: ClientIP
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
