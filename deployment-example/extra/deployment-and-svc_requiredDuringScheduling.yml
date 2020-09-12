@@ -37,7 +37,7 @@ spec:
         - name: nexus-registry
       containers:
         - name: js-app
-          image: registry.radut.xyz/js-app:v1
+          image: radut/js-app:v1
           env:
           - name: SOME_KEY
             value: "some-value"
