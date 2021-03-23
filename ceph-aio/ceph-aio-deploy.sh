@@ -144,6 +144,7 @@ ceph config set mgr "mgr/dashboard/server_port" "8443"
 #ceph dashboard ac-user-create ceph ceph read-only
 
 echo ${CEPH_DASHBOARD_ADMIN_PASSWORD} >/tmp/dashboard-admin.passwd
+ceph dashboard set-pwd-policy-enabled false
 ceph dashboard ac-user-create admin -i /tmp/dashboard-admin.passwd administrator
 rm /tmp/dashboard-admin.passwd
 ceph mgr module disable dashboard || true
