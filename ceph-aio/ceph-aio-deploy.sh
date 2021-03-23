@@ -17,7 +17,8 @@ CEPH_NODE="$(hostname)"
 CEPH_NODE_IP="$(ip addr list |grep 'inet '|grep 192|cut -d' ' -f6|cut -d/ -f1)"
 CEPH_PUBLIC_NETWORK="192.168.10.0/24"
 
-CEPH_RELEASE="octopus"
+#CEPH_RELEASE="octopus"
+CEPH_RELEASE="nautilus"
 DATA_DISK="/dev/osd/osd_data"
 
 DATA_DEV_SIZE="${DATA_DEV_SIZE:="40G"}"
