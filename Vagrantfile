@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  #config.vm.box = "bento/ubuntu-16.04"
-  config.vm.box = 'ubuntu/bionic64'
+  #config.vm.box = 'ubuntu/bionic64'
+  config.vm.box = 'ubuntu/focal64'
   config.vm.hostname = "k8s-master"
 
   config.vm.network "private_network", ip: "172.16.16.10", :adapter => 2
