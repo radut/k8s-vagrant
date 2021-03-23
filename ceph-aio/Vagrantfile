@@ -10,7 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.ssh.username = ENV['username']
   end
 
-  config.vm.box = 'ubuntu/focal64'
+  config.vm.box = 'ubuntu/bionic64'
   config.disksize.size = '50GB'
   #config.vm.network 'forwarded_port', guest: 8080, host: 8880
   #config.vm.network "public_network", bridge: "bridge0"
