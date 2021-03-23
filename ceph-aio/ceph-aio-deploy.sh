@@ -142,7 +142,10 @@ ceph config set mgr "mgr/dashboard/ssl" "false"
 ceph config set mgr "mgr/dashboard/server_addr" "192.168.10.10"
 ceph config set mgr "mgr/dashboard/server_port" "8443"
 #ceph dashboard ac-user-create ceph ceph read-only
-ceph dashboard ac-user-create admin ${CEPH_DASHBOARD_ADMIN_PASSWORD} administrator
+
+echo ${CEPH_DASHBOARD_ADMIN_PASSWORD} >/tmp/dashboard-admin.passwd
+ceph dashboard ac-user-create admin -i /tmp/dashboard-admin.passwd administrator
+rm /tmp/dashboard-admin.passwd
 ceph mgr module disable dashboard || true
 ceph mgr module enable dashboard --force
 
