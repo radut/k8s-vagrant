@@ -1,6 +1,6 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
 
-set -e
+set -ex
 
 LOCALDIR="$(dirname $0)"
 
