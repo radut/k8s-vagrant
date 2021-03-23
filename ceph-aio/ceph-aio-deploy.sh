@@ -172,8 +172,16 @@ ceph dashboard set-rgw-api-user-id rgw-admin
 ceph dashboard set-rgw-api-port ${RGW_PORT}
 ceph dashboard set-rgw-api-host ${CEPH_NODE_IP}
 
-ceph dashboard set-rgw-api-access-key `radosgw-admin user info --uid=rgw-admin | jq -r .keys[].access_key`
-ceph dashboard set-rgw-api-secret-key `radosgw-admin user info --uid=rgw-admin | jq -r .keys[].secret_key`
+
+radosgw-admin user info --uid=rgw-admin | jq -r .keys[].access_key > /tmp/rgw-access.key
+radosgw-admin user info --uid=rgw-admin | jq -r .keys[].secret_key > /tmp/rgw-secret.key
+ceph dashboard set-rgw-api-access-key -i /tmp/rgw-access.key
+ceph dashboard set-rgw-api-secret-key -i /tmp/rgw-secret.key
+
+rm /tmp/rgw-access.key
+rm /tmp/rgw-secret.key
+
+
 
 ceph dashboard feature disable iscsi mirroring
 
