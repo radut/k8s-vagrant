@@ -7,7 +7,7 @@ LOCALDIR="$(dirname $0)"
 apt-get -qqy update
 # Cleaning up
 apt-get -qqy purge $(dpkg -l | egrep 'juju|chef|puppet|ruby|rpcbind' | awk '{print $2}' | xargs) && apt-get -qqy --purge autoremove
-apt-get -qqy install python-magic python-pip3 jq pwgen
+apt-get -qqy install python-magic python3-pip jq pwgen
 pip3 install ceph-deploy s3cmd yq yasha
 
 cd /vagrant
