@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -ex
 for arg in "$@"; do
     case $arg in
         --with-helm)
@@ -29,6 +28,7 @@ for arg in "$@"; do
     esac
 done
 
+set -ex
 BASEDIR=$(dirname $0)
 
 if [ "$DOCKER" = true ]; then
