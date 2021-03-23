@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -ex
 for arg in "$@"; do
     case $arg in
         --with-helm)
